@@ -41,6 +41,12 @@ export const loginFormControls = [
 
 export const addProductFormElements = [
   {
+    label: "image",
+    name: "image",
+    componentType: "input",
+    type: "text",
+    placeholder: "Enter product url",
+  },{
     label: "Title",
     name: "title",
     componentType: "input",
@@ -63,6 +69,8 @@ export const addProductFormElements = [
       { id: "kids", label: "Kids" },
       { id: "accessories", label: "Accessories" },
       { id: "footwear", label: "Footwear" },
+      { id: "toys", label: "Toys" },
+      {id: "other", label: "other" },
     ],
   },
   {
@@ -76,6 +84,7 @@ export const addProductFormElements = [
       { id: "levi", label: "Levi's" },
       { id: "zara", label: "Zara" },
       { id: "h&m", label: "H&M" },
+      { id: "other", label: "Other" },
     ],
   },
   {
@@ -102,14 +111,10 @@ export const addProductFormElements = [
 ];
 
 export const shoppingViewHeaderMenuItems = [
-  {
-    id: "home",
-    label: "Home",
-    path: "/shop/home",
-  },
+  
   {
     id: "products",
-    label: "Products",
+    label: "All Products",
     path: "/shop/listing",
   },
   {
@@ -141,6 +146,7 @@ export const shoppingViewHeaderMenuItems = [
     id: "search",
     label: "Search",
     path: "/shop/search",
+    type: "input"
   },
 ];
 
@@ -150,6 +156,8 @@ export const categoryOptionsMap = {
   kids: "Kids",
   accessories: "Accessories",
   footwear: "Footwear",
+  toys: "Toys",
+  other: "Other",
 };
 
 export const brandOptionsMap = {
@@ -159,6 +167,7 @@ export const brandOptionsMap = {
   levi: "Levi",
   zara: "Zara",
   "h&m": "H&M",
+  other: "Other",
 };
 
 export const filterOptions = {
@@ -168,6 +177,8 @@ export const filterOptions = {
     { id: "kids", label: "Kids" },
     { id: "accessories", label: "Accessories" },
     { id: "footwear", label: "Footwear" },
+    { id: "toys", label: "Toys" },
+    { id: "other", label: "Other" },
   ],
   brand: [
     { id: "nike", label: "Nike" },
@@ -176,6 +187,7 @@ export const filterOptions = {
     { id: "levi", label: "Levi's" },
     { id: "zara", label: "Zara" },
     { id: "h&m", label: "H&M" },
+    { id: "other", label: "Other" },
   ],
 };
 
@@ -184,6 +196,8 @@ export const sortOptions = [
   { id: "price-hightolow", label: "Price: High to Low" },
   { id: "title-atoz", label: "Title: A to Z" },
   { id: "title-ztoa", label: "Title: Z to A" },
+  { id: "newest", label: "Newest Arrivals" },
+  { id: "bestsellers", label: "Bestsellers" },
 ];
 
 export const addressFormControls = [

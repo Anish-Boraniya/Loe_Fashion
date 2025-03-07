@@ -22,7 +22,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import PaypalReturnPage from "./pages/shopping-view/paypal-return";
 import PaymentSuccessPage from "./pages/shopping-view/payment-success";
 import SearchProducts from "./pages/shopping-view/search";
-
+import FakePaymentForm from "./pages/shopping-view/FakePaymentForm";
+import PaymentSuccess from "./pages/shopping-view/PaymentSuccess";
+import PaymentFailure from "./pages/shopping-view/PaymentFailure";
+import About from "./pages/shopping-view/About";
+import Contect from "./pages/shopping-view/Contect";
+import Image from "./pages/admin-view/image";
 function App() {
   const { user, isAuthenticated, isLoading } = useSelector(
     (state) => state.auth
@@ -72,6 +77,7 @@ function App() {
           <Route path="products" element={<AdminProducts />} />
           <Route path="orders" element={<AdminOrders />} />
           <Route path="features" element={<AdminFeatures />} />
+          <Route path="image" element={<Image />} />
         </Route>
         <Route
           path="/shop"
@@ -88,6 +94,11 @@ function App() {
           <Route path="paypal-return" element={<PaypalReturnPage />} />
           <Route path="payment-success" element={<PaymentSuccessPage />} />
           <Route path="search" element={<SearchProducts />} />
+          <Route path="payment" element={<FakePaymentForm />} />
+          <Route path="paymentSuccess" element={<PaymentSuccess />} />
+          <Route path="paymentFailure" element={<PaymentFailure />} />
+          <Route path="about" element={<About />} />
+          <Route path="contect" element={<Contect />} />
         </Route>
         <Route path="/unauth-page" element={<UnauthPage />} />
         <Route path="*" element={<NotFound />} />

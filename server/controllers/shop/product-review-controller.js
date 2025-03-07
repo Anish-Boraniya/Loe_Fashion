@@ -17,7 +17,7 @@ const addProductReview = async (req, res) => {
       return res.status(403).json({
         success: false,
         message: "You need to purchase product to review it.",
-      });
+      },console.error(message));
     }
 
     const checkExistinfReview = await ProductReview.findOne({
@@ -55,7 +55,7 @@ const addProductReview = async (req, res) => {
       data: newReview,
     });
   } catch (e) {
-    console.log(e);
+    console.log("unsave review",e);
     res.status(500).json({
       success: false,
       message: "Error",

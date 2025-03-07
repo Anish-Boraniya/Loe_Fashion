@@ -13,11 +13,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 
 function SearchProducts() {
-  const [keyword, setKeyword] = useState("");
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useDispatch();
-  const { searchResults } = useSelector((state) => state.shopSearch);
+  const {searchResults } = useSelector((state) => state.shopSearch);
   const { productDetails } = useSelector((state) => state.shopProducts);
 
   const { user } = useSelector((state) => state.auth);
@@ -25,6 +24,11 @@ function SearchProducts() {
   const { cartItems } = useSelector((state) => state.shopCart);
   const { toast } = useToast();
   useEffect(() => {
+   const fetch = async ()=>{
+    const keyword = await JSON.parse(localStorage.getItem("keyword"))
+    if(!keyword){
+      console.log("Couldn't find keyword")
+    }
     if (keyword && keyword.trim() !== "" && keyword.trim().length > 3) {
       setTimeout(() => {
         setSearchParams(new URLSearchParams(`?keyword=${keyword}`));
@@ -34,7 +38,9 @@ function SearchProducts() {
       setSearchParams(new URLSearchParams(`?keyword=${keyword}`));
       dispatch(resetSearchResults());
     }
-  }, [keyword]);
+   }
+   fetch();
+  }, []);
 
   function handleAddtoCart(getCurrentProductId, getTotalStock) {
     console.log(cartItems);
@@ -86,16 +92,8 @@ function SearchProducts() {
 
   return (
     <div className="container mx-auto md:px-6 px-4 py-8">
-      <div className="flex justify-center mb-8">
-        <div className="w-full flex items-center">
-          <Input
-            value={keyword}
-            name="keyword"
-            onChange={(event) => setKeyword(event.target.value)}
-            className="py-6"
-            placeholder="Search Products..."
-          />
-        </div>
+      <div className="flex mt-[15vh] justify-center mb-8">
+        
       </div>
       {!searchResults.length ? (
         <h1 className="text-5xl font-extrabold">No result found!</h1>

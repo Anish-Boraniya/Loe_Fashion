@@ -35,19 +35,19 @@ export const fetchAllProducts = createAsyncThunk(
 );
 
 export const editProduct = createAsyncThunk(
-  "/products/editProduct",
+  "/api/edit",
   async ({ id, formData }) => {
-    const result = await axios.put(
-      `http://localhost:5000/api/admin/products/edit/${id}`,
-      formData,
-      {
+    try {
+      console.log("Sending edit request for ID:", id, "with data:", formData);
+      const response = await axios.put(`http://localhost:5000/api/admin/products/edit/${id}`, formData, {
         headers: {
           "Content-Type": "application/json",
         },
-      }
-    );
-
-    return result?.data;
+      });
+      return response?.data;
+    } catch (error) {
+       throw new Error(error.response?.data?.message || error.message);
+    }
   }
 );
 

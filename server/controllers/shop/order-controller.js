@@ -1,4 +1,5 @@
 const paypal = require("../../helpers/paypal");
+const razorpay = require("../../helpers/razorpay");
 const Order = require("../../models/Order");
 const Cart = require("../../models/Cart");
 const Product = require("../../models/Product");
@@ -15,90 +16,108 @@ const createOrder = async (req, res) => {
       totalAmount,
       orderDate,
       orderUpdateDate,
-      paymentId,
-      payerId,
       cartId,
     } = req.body;
 
-    const create_payment_json = {
-      intent: "sale",
-      payer: {
-        payment_method: "paypal",
-      },
-      redirect_urls: {
-        return_url: "http://localhost:5173/shop/paypal-return",
-        cancel_url: "http://localhost:5173/shop/paypal-cancel",
-      },
-      transactions: [
-        {
-          item_list: {
-            items: cartItems.map((item) => ({
-              name: item.title,
-              sku: item.productId,
-              price: item.price.toFixed(2),
-              currency: "USD",
-              quantity: item.quantity,
-            })),
-          },
-          amount: {
-            currency: "USD",
-            total: totalAmount.toFixed(2),
-          },
-          description: "description",
-        },
-      ],
+
+    // Validate required fields
+    if (!userId || !cartItems || !addressInfo || !totalAmount || !cartId) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing required fields in the request body.",
+      });
+    }
+
+    // Validate totalAmount (must be a positive number)
+    if (typeof totalAmount !== "number" || totalAmount <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid totalAmount. It must be a positive number.",
+      });
+    }
+
+    console.log('Received Order Data:', {
+      totalAmount,
+      userId,
+      cartId
+    });
+
+    const options = {
+      amount: Math.round(totalAmount * 100), // Amount in paise
+      currency: "INR",
+      receipt: "order_rcptid_" + Date.now(),
     };
 
-    paypal.payment.create(create_payment_json, async (error, paymentInfo) => {
-      if (error) {
-        console.log(error);
+    console.log('Razorpay Order Options:', options);
 
+    try {
+      const order = await razorpay.orders.create(options);
+      
+
+      
+      if (!order || !order.id) {
         return res.status(500).json({
-          success: false,
-          message: "Error while creating paypal payment",
-        });
-      } else {
-        const newlyCreatedOrder = new Order({
-          userId,
-          cartId,
-          cartItems,
-          addressInfo,
-          orderStatus,
-          paymentMethod,
-          paymentStatus,
-          totalAmount,
-          orderDate,
-          orderUpdateDate,
-          paymentId,
-          payerId,
-        });
+        success: false,
+        message: "Failed to create Razorpay order. No order ID returned.",
+         });
+       }
+      console.log('Razorpay Order Created:', order);
+      if(order){
+        
+      const newlyCreatedOrder = new Order({
+        userId,
+        cartId,
+        cartItems,
+        addressInfo,
+        orderStatus,
+        paymentMethod,
+        paymentStatus,
+        totalAmount,
+        orderDate,
+        orderUpdateDate,
+        paymentId: order.id,
+      });
 
-        await newlyCreatedOrder.save();
+      await newlyCreatedOrder.save();
 
-        const approvalURL = paymentInfo.links.find(
-          (link) => link.rel === "approval_url"
-        ).href;
-
-        res.status(201).json({
-          success: true,
-          approvalURL,
-          orderId: newlyCreatedOrder._id,
-        });
-      }
-    });
+      res.status(201).json({
+        success: true,
+        orderId: newlyCreatedOrder._id,
+        razorpayOrderId: order.id,
+      });
+    } 
+    } catch (razorpayError) {
+      console.error("Detailed Razorpay Error:", razorpayError);
+      return res.status(500).json({
+        success: false,
+        message: "Error creating Razorpay order",
+        error: razorpayError.message || razorpayError,
+        fullError: razorpayError
+      });
+    }
   } catch (e) {
-    console.log(e);
+    console.error("General Error:", e);
     res.status(500).json({
       success: false,
-      message: "Some error occured!",
+      message: "Some error occurred!",
+      error: e.message
     });
   }
 };
 
+const crypto = require("crypto");
+
 const capturePayment = async (req, res) => {
   try {
-    const { paymentId, payerId, orderId } = req.body;
+    const { razorpayPaymentId, razorpayOrderId, razorpaySignature, orderId } = req.body;
 
+    if (!razorpayPaymentId || !razorpayOrderId || !razorpaySignature || !orderId) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing required fields in the request body.",
+      });
+    }
+    console.log("capttured payment successful")
     let order = await Order.findById(orderId);
 
     if (!order) {
@@ -108,10 +127,17 @@ const capturePayment = async (req, res) => {
       });
     }
 
+    const generatedSignature = crypto.createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
+  .update(razorpayOrderId + "|" + razorpayPaymentId)
+  .digest('hex');
+
+   if (generatedSignature !== razorpaySignature) {
+  return res.status(400).json({ success: false, message: 'Payment verification failed' });
+  }
+
     order.paymentStatus = "paid";
     order.orderStatus = "confirmed";
-    order.paymentId = paymentId;
-    order.payerId = payerId;
+    order.paymentId = razorpayPaymentId;
 
     for (let item of order.cartItems) {
       let product = await Product.findById(item.productId);
@@ -129,23 +155,25 @@ const capturePayment = async (req, res) => {
     }
 
     const getCartId = order.cartId;
-    await Cart.findByIdAndDelete(getCartId);
+    await Cart.findByIdAndDelete(order.cartId);
 
     await order.save();
-
+    console.log("order saved")
     res.status(200).json({
       success: true,
       message: "Order confirmed",
       data: order,
     });
   } catch (e) {
-    console.log(e);
+    console.error("catured oatment failed",e);
     res.status(500).json({
       success: false,
-      message: "Some error occured!",
+      message: "Some error occurred!",
     });
   }
 };
+
+// ... rest of your controller
 
 const getAllOrdersByUser = async (req, res) => {
   try {

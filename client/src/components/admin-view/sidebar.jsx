@@ -7,6 +7,13 @@ import {
 import { Fragment } from "react";
 import { useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
+import { Link } from "react-router-dom";
+import { IoSettingsOutline } from "react-icons/io5";
+import { RiUploadCloud2Line } from "react-icons/ri";
+import { useDispatch } from "react-redux";
+import { FiLogOut } from "react-icons/fi";
+import { logoutUser } from "@/store/auth-slice";
+
 
 const adminSidebarMenuItems = [
   {
@@ -14,6 +21,12 @@ const adminSidebarMenuItems = [
     label: "Dashboard",
     path: "/admin/dashboard",
     icon: <LayoutDashboard />,
+  },
+  {
+    id: "image",
+    label: "image",
+    path: "/admin/image",
+    icon: <RiUploadCloud2Line />,
   },
   {
     id: "products",
@@ -31,9 +44,10 @@ const adminSidebarMenuItems = [
 
 function MenuItems({ setOpen }) {
   const navigate = useNavigate();
+  
 
   return (
-    <nav className="mt-8 flex-col flex gap-2">
+    <nav className=" mt-[8vh] border-b-2 border-zinc-200 pb-8  flex flex-col gap-5 w-full ">
       {adminSidebarMenuItems.map((menuItem) => (
         <div
           key={menuItem.id}
@@ -41,7 +55,9 @@ function MenuItems({ setOpen }) {
             navigate(menuItem.path);
             setOpen ? setOpen(false) : null;
           }}
-          className="flex cursor-pointer text-xl items-center gap-2 rounded-md px-3 py-2 text-muted-foreground hover:bg-muted hover:text-foreground"
+          className="
+          
+          flex gap-2 p-3 pl-5 hover:bg-black hover:text-white rounded-lg bg-zinc-100 items-center text-xl"
         >
           {menuItem.icon}
           <span>{menuItem.label}</span>
@@ -54,12 +70,18 @@ function MenuItems({ setOpen }) {
 function AdminSideBar({ open, setOpen }) {
   const navigate = useNavigate();
 
+  const dispatch = useDispatch();
+
+  function handleLogout() {
+      dispatch(logoutUser());
+    }
+
   return (
-    <Fragment>
+    <Fragment className="">
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent side="left" className="w-64">
-          <div className="flex flex-col h-full">
-            <SheetHeader className="border-b">
+          <div className="flex flex-col h-full ">
+            <SheetHeader className="border-b ">
               <SheetTitle className="flex gap-2 mt-5 mb-5">
                 <ChartNoAxesCombined size={30} />
                 <h1 className="text-2xl font-extrabold">Admin Panel</h1>
@@ -69,15 +91,20 @@ function AdminSideBar({ open, setOpen }) {
           </div>
         </SheetContent>
       </Sheet>
-      <aside className="hidden w-64 flex-col border-r bg-background p-6 lg:flex">
+      <aside className="hidden w-[18vw] flex-col border-r bg-background p-6 lg:flex  ">
         <div
           onClick={() => navigate("/admin/dashboard")}
-          className="flex cursor-pointer items-center gap-2"
+          className="flex cursor-pointer items-center gap-2 "
         >
           <ChartNoAxesCombined size={30} />
-          <h1 className="text-2xl font-extrabold">Admin Panel</h1>
+          <h1 className="text-2xl font-extrabold ">Admin Panel</h1>
         </div>
         <MenuItems />
+          <div
+          onClick={()=>handleLogout()}
+           className='mt-8 flex flex-col gap-2 px-1'>
+            <Link className=' w-full flex gap-2 p-3 pl-5 hover:bg-black hover:text-white rounded-lg bg-zinc-100 items-center text-xl'><FiLogOut /> Log Out</Link>
+          </div>
       </aside>
     </Fragment>
   );

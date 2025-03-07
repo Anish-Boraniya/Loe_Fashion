@@ -17,6 +17,7 @@ import {
   fetchAllProducts,
 } from "@/store/admin/products-slice";
 import { Fragment, useEffect, useState } from "react";
+import { BiRupee } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 
 const initialFormData = {
@@ -51,17 +52,32 @@ function AdminProducts() {
       ? dispatch(
           editProduct({
             id: currentEditedId,
-            formData,
+            formData: formData,
           })
         ).then((data) => {
           console.log(data, "edit");
 
+        try{
           if (data?.payload?.success) {
             dispatch(fetchAllProducts());
-            setFormData(initialFormData);
             setOpenCreateProductsDialog(false);
             setCurrentEditedId(null);
+          }else {
+            console.log(data?.error)
+            toast({
+              title: "Failed to update product",
+              description: data?.error?.message || "Unknown error occurred",
+              variant: "destructive"
+            });
           }
+        }catch(e){
+          console.error("error is edit",e);
+          toast({
+            title: "Failed to update product",
+            description: e.message || "Unknown error occurred",
+            variant: "destructive"
+          });
+        }
         })
       : dispatch(
           addNewProduct({
@@ -82,11 +98,14 @@ function AdminProducts() {
   }
 
   function handleDelete(getCurrentProductId) {
-    dispatch(deleteProduct(getCurrentProductId)).then((data) => {
-      if (data?.payload?.success) {
-        dispatch(fetchAllProducts());
-      }
-    });
+    const userConfirmed = confirm("are you sure you want to delete this product?");
+    if(userConfirmed ){
+      dispatch(deleteProduct(getCurrentProductId)).then((data) => {
+        if (data?.payload?.success) {
+          dispatch(fetchAllProducts());
+        }
+      });
+    }
   }
 
   function isFormValid() {
@@ -102,23 +121,52 @@ function AdminProducts() {
 
   console.log(formData, "productList");
 
+  const discountPercentage = productList?.price && productList?.salePrice 
+  ? Math.round(((productList.price - productList.salePrice) / productList.price) * 100) 
+  : 0;
+
   return (
     <Fragment>
-      <div className="mb-5 w-full flex justify-end">
+      <div className="mb-7 w-full flex justify-between">
+      <div>
+      <h1 className=" ml-2 text-3xl font-bold"> All Products</h1>
+      </div>
         <Button onClick={() => setOpenCreateProductsDialog(true)}>
           Add New Product
         </Button>
       </div>
       <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
         {productList && productList.length > 0
-          ? productList.map((productItem) => (
-              <AdminProductTile
-                setFormData={setFormData}
-                setOpenCreateProductsDialog={setOpenCreateProductsDialog}
-                setCurrentEditedId={setCurrentEditedId}
-                product={productItem}
-                handleDelete={handleDelete}
-              />
+          ? productList.map((e,i) => (
+            <div className='w-70 h-90 relative rounded-xl overflow-hidden bg-white'>
+            <div className='w-full h-[50%] bg-[#e0e5e9]'>
+                <img className='w-full h-full z-[0]' src={e.image} alt="" />
+            </div>
+            <div className='text-black  h-[50%] flex flex-col gap-1  px-5 py-2'>
+                <h2 className='text-s font-semibold '>{e.title}</h2>
+                <h2 className='text-xs w-full h-8 overflow-hidden'>{e.description}</h2>
+                <div className='flex justify-between items-center px-3'>
+                <h2 className='text-md line-through w-9 overflow-hidden mt-2'>{e.price}</h2>
+                <span className="-ml-[4vw] mt-2 text-sm text-red-500">
+                  ({discountPercentage}% off)
+                </span>
+                <h2 className='text-lg mt-2 ml-2 w-[4vw] font-semibold'><span className="flex items-center"><BiRupee /> {e.salePrice}</span></h2>
+                </div>
+                <div>
+                <button
+                 onClick={()=>{
+                  setOpenCreateProductsDialog(true);
+                  setCurrentEditedId(e._id);
+                  setFormData(e);
+                 }}
+                className='w-[48%] mt-3 p-2 rounded-full text-[#D4E8F5] bg-[#000] hover:bg-black/85 cursor-pointer'>Edit</button>
+                <button 
+                onClick={handleDelete}
+                className='w-[48%] ml-2 mt-3 p-2 rounded-full text-[#D4E8F5] bg-[#000] hover:bg-black/85 cursor-pointer'>Delete</button>
+                </div>
+            </div>
+        </div>
+
             ))
           : null}
       </div>

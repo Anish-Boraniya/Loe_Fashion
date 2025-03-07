@@ -2,14 +2,19 @@ import { Card, CardContent, CardFooter } from "../ui/card";
 import { Button } from "../ui/button";
 import { brandOptionsMap, categoryOptionsMap } from "@/config";
 import { Badge } from "../ui/badge";
+import { BiRupee } from "react-icons/bi";
+
 
 function ShoppingProductTile({
   product,
   handleGetProductDetails,
   handleAddtoCart,
 }) {
+  const discountPercentage = product?.price && product?.salePrice 
+  ? Math.round(((product.price - product.salePrice) / product.price) * 100) 
+  : 0;
   return (
-    <Card className="w-full max-w-sm mx-auto">
+    <Card className=" w-70 h-90 drop-shadow-lg relative rounded-xl overflow-hidden bg-white ">
       <div onClick={() => handleGetProductDetails(product?._id)}>
         <div className="relative">
           <img
@@ -32,26 +37,26 @@ function ShoppingProductTile({
           ) : null}
         </div>
         <CardContent className="p-4">
-          <h2 className="text-xl font-bold mb-2">{product?.title}</h2>
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-[16px] text-muted-foreground">
-              {categoryOptionsMap[product?.category]}
-            </span>
-            <span className="text-[16px] text-muted-foreground">
-              {brandOptionsMap[product?.brand]}
+          <h2 className=" font-bold mb-1">{product?.title}</h2>
+          <div className="flex h-[8vh] ">
+            <span className="text-sm text-muted-foreground">
+              {product?.description}
             </span>
           </div>
           <div className="flex justify-between items-center mb-2">
             <span
               className={`${
                 product?.salePrice > 0 ? "line-through" : ""
-              } text-lg font-semibold text-primary`}
+              } text-lg font-semibold flex items-center text-primary`}
             >
-              ${product?.price}
+              <BiRupee />{product?.price}
             </span>
+            <span className="-ml-[5vw] text-sm text-red-500">
+                  ({discountPercentage}% off)
+                </span>
             {product?.salePrice > 0 ? (
-              <span className="text-lg font-semibold text-primary">
-                ${product?.salePrice}
+              <span className="text-lg flex items-center font-semibold text-primary">
+                <BiRupee />{product?.salePrice}
               </span>
             ) : null}
           </div>
@@ -65,7 +70,7 @@ function ShoppingProductTile({
         ) : (
           <Button
             onClick={() => handleAddtoCart(product?._id, product?.totalStock)}
-            className="w-full"
+            className="w-full rounded-full cursor-pointer"
           >
             Add to cart
           </Button>

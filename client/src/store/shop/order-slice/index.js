@@ -2,33 +2,43 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const initialState = {
-  approvalURL: null,
   isLoading: false,
   orderId: null,
+  razorpayOrderId: null, // Add Razorpay order ID
+  razorpayPaymentId: null, //add payment id
+  razorpaySignature: null, // add signature
   orderList: [],
   orderDetails: null,
 };
 
 export const createNewOrder = createAsyncThunk(
   "/order/createNewOrder",
-  async (orderData) => {
-    const response = await axios.post(
-      "http://localhost:5000/api/shop/order/create",
-      orderData
-    );
-
-    return response.data;
+  async (orderData, { rejectWithValue }) => {
+    try {
+      console.log('Creating Order with Data:', orderData);
+      const response = await axios.post(
+        "http://localhost:5000/api/shop/order/create",
+        orderData
+      );
+      
+      console.log('Order Creation Response:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Axios Order Creation Error:', error.response?.data || error.message);
+      return rejectWithValue(error.response?.data || error.message);
+    }
   }
 );
 
 export const capturePayment = createAsyncThunk(
   "/order/capturePayment",
-  async ({ paymentId, payerId, orderId }) => {
+  async ({ razorpayPaymentId, razorpayOrderId, razorpaySignature, orderId }) => { //update parameters
     const response = await axios.post(
       "http://localhost:5000/api/shop/order/capture",
       {
-        paymentId,
-        payerId,
+        razorpayPaymentId, //update payload
+        razorpayOrderId,
+        razorpaySignature,
         orderId,
       }
     );
@@ -66,6 +76,10 @@ const shoppingOrderSlice = createSlice({
     resetOrderDetails: (state) => {
       state.orderDetails = null;
     },
+    setRazorpayPaymentDetails: (state, action) => {
+      state.razorpayPaymentId = action.payload.razorpayPaymentId;
+      state.razorpaySignature = action.payload.razorpaySignature;
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -74,8 +88,8 @@ const shoppingOrderSlice = createSlice({
       })
       .addCase(createNewOrder.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.approvalURL = action.payload.approvalURL;
         state.orderId = action.payload.orderId;
+        state.razorpayOrderId = action.payload.razorpayOrderId; // Store Razorpay order ID
         sessionStorage.setItem(
           "currentOrderId",
           JSON.stringify(action.payload.orderId)
@@ -83,8 +97,22 @@ const shoppingOrderSlice = createSlice({
       })
       .addCase(createNewOrder.rejected, (state) => {
         state.isLoading = false;
-        state.approvalURL = null;
         state.orderId = null;
+        state.razorpayOrderId = null;
+      })
+      .addCase(capturePayment.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(capturePayment.fulfilled, (state, action) => {
+        state.isLoading = false;
+        action.fulfilled = true;
+        // Handle successful payment capture (e.g., update order status)
+        // You might want to add more specific state updates here
+      })
+      .addCase(capturePayment.rejected, (state) => {
+        state.isLoading = false;
+
+        // Handle payment capture failure
       })
       .addCase(getAllOrdersByUserId.pending, (state) => {
         state.isLoading = true;
@@ -111,6 +139,6 @@ const shoppingOrderSlice = createSlice({
   },
 });
 
-export const { resetOrderDetails } = shoppingOrderSlice.actions;
+export const { resetOrderDetails, setRazorpayPaymentDetails } = shoppingOrderSlice.actions; //add the new reducer.
 
 export default shoppingOrderSlice.reducer;

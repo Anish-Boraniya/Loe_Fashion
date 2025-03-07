@@ -3,6 +3,7 @@ import { Button } from "../ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteCartItem, updateCartQuantity } from "@/store/shop/cart-slice";
 import { useToast } from "../ui/use-toast";
+import { BiRupee } from "react-icons/bi";
 
 function UserCartItemsContent({ cartItem }) {
   const { user } = useSelector((state) => state.auth);
@@ -104,8 +105,8 @@ function UserCartItemsContent({ cartItem }) {
         </div>
       </div>
       <div className="flex flex-col items-end">
-        <p className="font-semibold">
-          $
+        <p className="font-semibold flex items-center">
+          <BiRupee />
           {(
             (cartItem?.salePrice > 0 ? cartItem?.salePrice : cartItem?.price) *
             cartItem?.quantity
