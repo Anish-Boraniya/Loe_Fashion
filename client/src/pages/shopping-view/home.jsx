@@ -272,7 +272,7 @@ function ShoppingHome() {
                   backgroundImage: `url(${categoryItem.image})`,
                   animationDuration:"1500ms"
                }}
-                className={`cursor-pointer p-5 bg-cover  hover:w-[102%] hover:h-[103%]  hover:shadow-xl transition-shadow transition-transform ${
+                className={`cursor-pointer p-5 bg-cover rounded-xl  hover:w-[102%] hover:h-[103%]  hover:shadow-xl transition-shadow transition-transform ${
                 isVisible ? 'animate-scale-up' : 'scale-0 opacity-0' 
                 }   ease-in-out`}
               >
@@ -307,10 +307,10 @@ function ShoppingHome() {
                   animationDuration:"1500ms"
                  }}
                  key={brandItem.id}
-                 className={`cursor-pointer p-5 bg-cover  hover:w-[102%] hover:h-[103%]  hover:shadow-xl transition-shadow  ${vis? 'animate-slide-down' : ''} opacity-0 `}
+                 className={`cursor-pointer p-5 bg-cover bg-white  rounded-xl hover:w-[102%] hover:h-[103%]  hover:shadow-xl transition-shadow  ${vis? 'animate-slide-down' : ''} opacity-0 `}
               >
                 <CardContent
-                 className="flex h-[20vh] flex-col items-start justify-start">
+                 className="flex h-[20vh] flex-col  items-start justify-start">
                   <span className="font-bold">{brandItem.label}</span>
                 </CardContent>
               </Card>
