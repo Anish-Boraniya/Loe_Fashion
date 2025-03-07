@@ -130,6 +130,8 @@ export default {
     },
   },
   plugins: [
-    await import('tailwindcss-animate').then(module => module.default),
-  ],
+    async function () {
+      const tailwindAnimate = await import('tailwindcss-animate');
+      return tailwindAnimate.default;
+    }(),  ],
 };
