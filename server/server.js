@@ -27,6 +27,7 @@ mongoose
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+
 app.use(
   cors({
     origin: "https://loe-fashion-1.onrender.com",
@@ -56,5 +57,7 @@ app.use("/api/shop/search", shopSearchRouter);
 app.use("/api/shop/review", shopReviewRouter);
 
 app.use("/api/common/feature", commonFeatureRouter);
+
+
 
 app.listen(PORT, () => console.log(`Server is now running on port ${PORT}`));
