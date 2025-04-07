@@ -41,7 +41,7 @@ function UserCartWrapper({ cartItems, setOpenCartSheet }) {
           navigate("/shop/checkout");
           setOpenCartSheet(false);
         }}
-        className="w-full mt-6"
+        className="w-[26vw] bottom-8 fixed mt-6"
       >
         Checkout
       </Button>

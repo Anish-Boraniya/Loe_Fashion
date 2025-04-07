@@ -26,11 +26,18 @@ const initialFormData = {
   description: "",
   category: "",
   brand: "",
+  size: [],
+  material:"",
+  pattern:"",
+  fit:"",
+  country:"",
+  color:"",
   price: "",
   salePrice: "",
   totalStock: "",
   averageReview: 0,
 };
+
 
 function AdminProducts() {
   const [openCreateProductsDialog, setOpenCreateProductsDialog] =
@@ -45,14 +52,137 @@ function AdminProducts() {
   const dispatch = useDispatch();
   const { toast } = useToast();
 
+  const [category,setCategory] = useState("")
+
+  const sizeOptionMap = {
+
+    clothing: [ 
+      { id: "s", label: "S" },
+      { id: "m", label: "M" },
+      { id: "l", label: "L" },
+      { id: "XL", label: "XL" },
+      { id: "2XL", label: "2XL" },
+      { id: "3XL", label: "3XL" },
+    ],
+    footwear: [
+      { id: "6", label: "6" },
+      { id: "7", label: "7" },
+      { id: "8", label: "8" },
+      { id: "9", label: "9" },
+      { id: "10", label: "10" },
+    ],
+    
+  }
+
+  const aaddProductFormElements = [
+    {
+      label: "image",
+      name: "image",
+      componentType: "input",
+      type: "text",
+      placeholder: "Enter product url",
+    },{
+      label: "Title",
+      name: "title",
+      componentType: "input",
+      type: "text",
+      placeholder: "Enter product title",
+    },
+    {
+      label: "Description",
+      name: "description",
+      componentType: "textarea",
+      placeholder: "Enter product description",
+    },
+    {
+      label: "Category",
+      name: "category",
+      componentType: "select",
+      options: [
+        { id: "men", label: "Men" },
+        { id: "women", label: "Women" },
+        { id: "kids", label: "Kids" },
+        { id: "accessories", label: "Accessories" },
+        { id: "footwear", label: "Footwear" },
+        { id: "toys", label: "Toys" },
+        {id: "other", label: "other" },
+      ],
+    },
+    {
+      label: "Brand",
+      name: "brand",
+      componentType: "select",
+      options: [
+        { id: "nike", label: "Nike" },
+        { id: "adidas", label: "Adidas" },
+        { id: "puma", label: "Puma" },
+        { id: "levi", label: "Levi's" },
+        { id: "zara", label: "Zara" },
+        { id: "h&m", label: "H&M" },
+        { id: "other", label: "Other" },
+      ],
+    },
+    {
+      label: "Size",
+      name: "size",
+      componentType: "select",
+      options: sizeOptionMap[category] ,
+    },
+    {
+      label: "Price",
+      name: "price",
+      componentType: "input",
+      type: "number",
+      placeholder: "Enter product price",
+    },
+    {
+      label: "Sale Price",
+      name: "salePrice",
+      componentType: "input",
+      type: "number",
+      placeholder: "Enter sale price (optional)",
+    },
+    {
+      label: "Total Stock",
+      name: "totalStock",
+      componentType: "input",
+      type: "number",
+      placeholder: "Enter total stock",
+    },
+  ];
+
   function onSubmit(event) {
     event.preventDefault();
+
+    const clothing = [
+      { id: "s", label: "S" },
+      { id: "m", label: "M" },
+      { id: "l", label: "L" },
+      { id: "xl", label: "XL" },
+      { id: "xxl", label: "XXL" },
+    ];
+    
+    const footwear = [
+      { id: "6", label: "6" },
+      { id: "7", label: "7" },
+      { id: "8", label: "8" },
+      { id: "9", label: "9" },
+      { id: "10", label: "10" },
+      { id: "11", label: "11" },
+    ];
+
+    if(formData.category === "men" || formData.category === "women" || formData.category === "kids"){
+      setFormData({...formData, size : clothing});
+    }else if(formData.category === "footwear"){
+      setFormData({...formData, size : footwear});
+    }
+
 
     currentEditedId !== null
       ? dispatch(
           editProduct({
             id: currentEditedId,
-            formData: formData,
+            formData,
           })
         ).then((data) => {
           console.log(data, "edit");
@@ -62,6 +192,7 @@ function AdminProducts() {
             dispatch(fetchAllProducts());
             setOpenCreateProductsDialog(false);
             setCurrentEditedId(null);
+            localStorage.removeItem('category')
           }else {
             console.log(data?.error)
             toast({
@@ -90,6 +221,7 @@ function AdminProducts() {
             setOpenCreateProductsDialog(false);
             setImageFile(null);
             setFormData(initialFormData);
+            localStorage.removeItem('category')
             toast({
               title: "Product add successfully",
             });
@@ -116,15 +248,18 @@ function AdminProducts() {
   }
 
   useEffect(() => {
-    dispatch(fetchAllProducts());
-  }, [dispatch]);
+     localStorage.removeItem('category')
+     const local = localStorage.getItem('category')
+     if(local){
+       setCategory(local)
+       console.log("localstorege ", local)
+     }
+     console.log("all products",productList)
+  }, [setFormData]);
 
   console.log(formData, "productList");
 
-  const discountPercentage = productList?.price && productList?.salePrice 
-  ? Math.round(((productList.price - productList.salePrice) / productList.price) * 100) 
-  : 0;
-
+  
   return (
     <Fragment>
       <div className="mb-7 w-full flex justify-between">
@@ -148,7 +283,7 @@ function AdminProducts() {
                 <div className='flex justify-between items-center px-3'>
                 <h2 className='text-md line-through w-9 overflow-hidden mt-2'>{e.price}</h2>
                 <span className="-ml-[4vw] mt-2 text-sm text-red-500">
-                  ({discountPercentage}% off)
+                  ({ Math.round(((e.price - e.salePrice) / e.price) * 100)}% off)
                 </span>
                 <h2 className='text-lg mt-2 ml-2 w-[4vw] font-semibold'><span className="flex items-center"><BiRupee /> {e.salePrice}</span></h2>
                 </div>
@@ -161,14 +296,14 @@ function AdminProducts() {
                  }}
                 className='w-[48%] mt-3 p-2 rounded-full text-[#D4E8F5] bg-[#000] hover:bg-black/85 cursor-pointer'>Edit</button>
                 <button 
-                onClick={handleDelete}
+                onClick={()=>handleDelete(e._id)}
                 className='w-[48%] ml-2 mt-3 p-2 rounded-full text-[#D4E8F5] bg-[#000] hover:bg-black/85 cursor-pointer'>Delete</button>
                 </div>
             </div>
         </div>
 
             ))
-          : null}
+          : <h1>Product Not Found !</h1>}
       </div>
       <Sheet
         open={openCreateProductsDialog}

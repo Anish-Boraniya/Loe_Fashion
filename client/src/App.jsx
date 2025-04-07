@@ -28,6 +28,7 @@ import PaymentFailure from "./pages/shopping-view/PaymentFailure";
 import About from "./pages/shopping-view/About";
 import Contect from "./pages/shopping-view/Contect";
 import Image from "./pages/admin-view/image";
+import Cursor from "./components/shopping-view/Cursor";
 function App() {
   const { user, isAuthenticated, isLoading } = useSelector(
     (state) => state.auth
@@ -44,6 +45,7 @@ function App() {
 
   return (
     <div className="flex flex-col overflow-hidden bg-white">
+      {/*<Cursor />*/}
       <Routes>
         <Route
           path="/"

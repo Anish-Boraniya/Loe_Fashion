@@ -8,13 +8,14 @@ import { BiRupee } from "react-icons/bi";
 function ShoppingProductTile({
   product,
   handleGetProductDetails,
+  setOpenDetailsDialog,
   handleAddtoCart,
 }) {
   const discountPercentage = product?.price && product?.salePrice 
   ? Math.round(((product.price - product.salePrice) / product.price) * 100) 
   : 0;
   return (
-    <Card className=" w-70 h-90 drop-shadow-lg relative rounded-xl overflow-hidden bg-white ">
+    <Card onClick={()=>setOpenDetailsDialog(true)} className=" w-70 h-90 drop-shadow-lg relative rounded-xl overflow-hidden bg-white ">
       <div onClick={() => handleGetProductDetails(product?._id)}>
         <div className="relative">
           <img

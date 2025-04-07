@@ -68,7 +68,7 @@ function ShoppingOrders() {
                       <Badge
                         className={`py-1 px-3 ${
                           orderItem?.orderStatus === "delivered"
-                            ? "bg-green-500"
+                            ? "bg-green-500 hover:bg-green-400"
                             : orderItem?.orderStatus === "rejected"
                             ? "bg-red-600"
                             : "bg-black"
@@ -80,6 +80,7 @@ function ShoppingOrders() {
                     <TableCell className="flex items-center mt-2"><BiRupee />{orderItem?.totalAmount}</TableCell>
                     <TableCell>
                       <Dialog
+                      className="w-full "
                         open={openDetailsDialog}
                         onOpenChange={() => {
                           setOpenDetailsDialog(false);

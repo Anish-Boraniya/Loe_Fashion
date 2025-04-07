@@ -4,6 +4,7 @@ import axios from "axios";
 const initialState = {
   isLoading: false,
   productList: [],
+  local : [],
 };
 
 export const addNewProduct = createAsyncThunk(
@@ -51,6 +52,14 @@ export const editProduct = createAsyncThunk(
   }
 );
 
+export const getLocal = createAsyncThunk(
+  "getLocal",
+  async () => {
+    const response =  localStorage.getItem("category")
+    return response;
+  }
+)
+
 export const deleteProduct = createAsyncThunk(
   "/products/deleteProduct",
   async (id) => {
@@ -78,6 +87,18 @@ const AdminProductsSlice = createSlice({
       .addCase(fetchAllProducts.rejected, (state, action) => {
         state.isLoading = false;
         state.productList = [];
+      });
+      builder.addCase(getLocal.pending, (state, action) => {
+        state.isLoading = true;
+      });
+      builder.addCase(getLocal.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.local = action.payload;
+        console.log("localstorege", state.local)
+      });
+      builder.addCase(getLocal.rejected, (state, action) => {
+        state.isLoading = false;
+        state.local = [];
       });
   },
 });

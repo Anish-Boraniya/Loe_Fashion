@@ -88,7 +88,7 @@ function HeaderRightContent() {
     dispatch(fetchCartItems(user?.id));
   }, [dispatch]);
 
-  console.log(cartItems, "sangam");
+  console.log(cartItems, "leo");
 
   return (
     <div className="flex lg:items-center lg:flex-row flex-col gap-4">
@@ -194,17 +194,17 @@ function ShoppingHeader() {
               onMouseLeave={() => setShow(false)}
             >
               <Link onClick={()=>setShow(false)} to="/shop/listing">Products</Link> 
-              {show && (
+              {show && (  
                 <div
                   className="absolute z-[50] top-8 left-0 w-[25vw] h-[30vw] "
                 >
-                  <div className="p-5 rounded-lg mt-10 drop-shadow-xl w-[25vw] h-[35vh] bg-white"><MenuItems /></div>
+                  <div className="p-10 rounded-lg mt-10 drop-shadow-xl w-[25vw] h-[35vh] bg-white"><MenuItems /></div>
                   
                 </div>
               )}
             </div>
           <Link to="/shop/about" className="h-9 hover:border-b-2 hover:border-black hover:border-solid" >About Us</Link>
-          <Link to="/shop/contect"className="h-9 hover:border-b-2 hover:border-black hover:border-solid">Contect Us</Link>
+          <Link to="/shop/contect"className="h-9 hover:border-b-2 hover:border-black hover:border-solid">Contact Us</Link>
           <div>
             <input
              onChange={(e)=>setKeyword(e.target.value)}

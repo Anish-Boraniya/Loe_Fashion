@@ -4,7 +4,7 @@ import axios from "axios";
 const initialState = {
   isLoading: false,
   productList: [],
-  productDetails: null,
+  productDetails: [],
 };
 
 export const fetchAllFilteredProducts = createAsyncThunk(
@@ -33,7 +33,6 @@ export const fetchProductDetails = createAsyncThunk(
     const result = await axios.get(
       `http://localhost:5000/api/shop/products/get/${id}`
     );
-
     return result?.data;
   }
 );

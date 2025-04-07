@@ -164,7 +164,7 @@ function ShoppingCheckout() {
     ).then((data) => {
        try{
         if (data) {
-          navigate("/shop/payment-success");
+          navigate(`/shop/payment-success?orderId=${orderId}`);
           toast({
             title: "Payment Successful",
             description: "Your order has been placed.",

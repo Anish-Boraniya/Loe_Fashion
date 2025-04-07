@@ -99,7 +99,7 @@ function ShoppingHome() {
   }
 
   useEffect(() => {
-    if (productDetails !== null) setOpenDetailsDialog(true);
+    if (productDetails === 0) setOpenDetailsDialog(true);
   }, [productDetails]);
 
   useEffect(() => {
@@ -331,8 +331,10 @@ function ShoppingHome() {
             {productList && productList.length > 0
               ? productList.map((productItem) => (
                   <ShoppingProductTile
+                    onClick={()=>setOpenDetailsDialog(true)}
                     className={`${vis2?"animate-fade-in":"opacity-0"}`}
                     handleGetProductDetails={handleGetProductDetails}
+                    setOpenDetailsDialog={setOpenDetailsDialog}
                     product={productItem}
                     handleAddtoCart={handleAddtoCart}
                   />

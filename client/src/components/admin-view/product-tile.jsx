@@ -10,8 +10,8 @@ function AdminProductTile({
   handleDelete,
 }) {
   const discountPercentage = product?.price && product?.salePrice 
-    ? Math.round(((product.price - product.salePrice) / product.price) * 100) 
-    : 0;
+  ? Math.round(((product.price - product.salePrice) / product.price) * 100) 
+  : 0;
   return (
     <Card className="w-full max-w-sm mx-auto">
       <div>

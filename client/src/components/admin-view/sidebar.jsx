@@ -77,7 +77,7 @@ function AdminSideBar({ open, setOpen }) {
     }
 
   return (
-    <Fragment className="">
+    <Fragment>
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent side="left" className="w-64">
           <div className="flex flex-col h-full ">

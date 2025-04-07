@@ -1,3 +1,37 @@
+const category = localStorage.getItem("category") || "clothing"
+console.log("categoryss",category)
+
+ 
+
+const sizeOptionMap = {
+
+  clothing: [
+    { id: "cotton", label: "Cotton" },
+    { id: "polyester", label: "Polyester" },
+    { id: "wool", label: "Wool" },
+    { id: "silk", label: "Silk" },
+    { id: "denim", label: "Denim" },
+    { id: "leather", label: "Leather" },
+  ],
+  footwear: [
+    { id: "leather", label: "Leather" },
+    { id: "synthetic", label: "Synthetic" },
+    { id: "canvas", label: "Canvas" },
+    { id: "rubber", label: "Rubber" },
+    { id: "suede", label: "Suede" },
+    { id: "mesh", label: "Mesh" },
+  ],
+  accessories: [
+    { id: "leather", label: "Leather" },
+    { id: "metal", label: "Metal" },
+    { id: "plastic", label: "Plastic" },
+    { id: "wood", label: "Wood" },
+    { id: "fabric", label: "Fabric" },
+    { id: "glass", label: "Glass" },
+    { id: "silicone", label: "Silicone" },
+  ],
+  
+}
 export const registerFormControls = [
   {
     name: "userName",
@@ -69,7 +103,6 @@ export const addProductFormElements = [
       { id: "kids", label: "Kids" },
       { id: "accessories", label: "Accessories" },
       { id: "footwear", label: "Footwear" },
-      { id: "toys", label: "Toys" },
       {id: "other", label: "other" },
     ],
   },
@@ -86,6 +119,41 @@ export const addProductFormElements = [
       { id: "h&m", label: "H&M" },
       { id: "other", label: "Other" },
     ],
+  },
+  {
+    label: "Material",
+    name: "material",
+    componentType: "input",
+    type: "text",
+    placeholder: "Enter product matrial ",
+  },
+  {
+    label: "Pattern",
+    name: "pattern",
+    componentType: "input",
+    type: "text",
+    placeholder: "Enter product pattern ",
+  },
+  {
+    label: "Fit Type",
+    name: "fit",
+    componentType: "input",
+    type: "text",
+    placeholder: "Enter product fit type ",
+  },
+  {
+    label: "Country Of Origin",
+    name: "country",
+    componentType: "input",
+    type: "text",
+    placeholder: "Enter product country of origin ",
+  },
+  {
+    label: "Color",
+    name: "color",
+    componentType: "input",
+    type: "text",
+    placeholder: "Enter product color  ",
   },
   {
     label: "Price",
@@ -236,3 +304,4 @@ export const addressFormControls = [
     placeholder: "Enter any additional notes",
   },
 ];
+

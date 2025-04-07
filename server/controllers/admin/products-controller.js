@@ -29,6 +29,12 @@ const addProduct = async (req, res) => {
       description,
       category,
       brand,
+      size,
+      material,
+      pattern,
+      fit,
+      country,
+      color,
       price,
       salePrice,
       totalStock,
@@ -43,6 +49,12 @@ const addProduct = async (req, res) => {
       description,
       category,
       brand,
+      size,
+      material,
+      pattern,
+      fit,
+      country,
+      color,
       price,
       salePrice,
       totalStock,
@@ -91,6 +103,12 @@ const editProduct = async (req, res) => {
       description,
       category,
       brand,
+      size,
+      material,
+      pattern,
+      fit,
+      country,
+      color,
       price,
       salePrice,
       totalStock,
@@ -104,17 +122,26 @@ const editProduct = async (req, res) => {
         message: "Product not found",
       });
 
+      console.log("sizes", size)
+
     findProduct.title = title || findProduct.title;
     findProduct.description = description || findProduct.description;
     findProduct.category = category || findProduct.category;
     findProduct.brand = brand || findProduct.brand;
+    findProduct.size = size 
+    findProduct.material = material || findProduct.material;
+    findProduct.pattern = pattern || findProduct.pattern;
+    findProduct.fit = fit || findProduct.fit;
+    findProduct.country = country || findProduct.country;
+    findProduct.color = color || findProduct.color;
     findProduct.price = price === "" ? 0 : price || findProduct.price;
     findProduct.salePrice =
       salePrice === "" ? 0 : salePrice || findProduct.salePrice;
     findProduct.totalStock = totalStock || findProduct.totalStock;
     findProduct.image = image || findProduct.image;
     findProduct.averageReview = averageReview || findProduct.averageReview;
-
+    
+    console.log("product update seuccessfully")
     await findProduct.save();
     res.status(200).json({
       success: true,
