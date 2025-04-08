@@ -61,9 +61,9 @@ function About() {
   ];
 
   const team = [
-    { name: "Alex Johnson", role: "Founder & CEO", image: teamMember1, quote: "Fashion is about dreaming and making other people dream.",image :teamMember1 },
-    { name: "Samantha Lee", role: "Creative Director", image: teamMember2, quote: "Style is a way to say who you are without having to speak." ,image :teamMember2},
-    { name: "David Martinez", role: "Head of Operations", image: teamMember3, quote: "Quality is remembered long after price is forgotten.",image :teamMember3 }
+    { name: "Alex Johnson", role: "Founder & CEO", image: teamMember1, quote: "Fashion is about dreaming and making other people dream."},
+    { name: "Samantha Lee", role: "Creative Director", image: teamMember2, quote: "Style is a way to say who you are without having to speak." },
+    { name: "David Martinez", role: "Head of Operations", image: teamMember3, quote: "Quality is remembered long after price is forgotten." }
   ];
 
   const brand =[
