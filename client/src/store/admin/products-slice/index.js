@@ -7,6 +7,9 @@ const initialState = {
   local : [],
 };
 
+const url = "https://loe-fashion.onrender.com"
+
+
 export const addNewProduct = createAsyncThunk(
   "/products/addnewproduct",
   async (formData) => {
