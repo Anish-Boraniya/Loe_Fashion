@@ -36,7 +36,7 @@ const allowedOrigins = [
 
 app.use(
   cors({
-    origin: "https://loe-fashion-1.onrender.com",
+    origin: "https://loe-fashion-git-main-anishs-projects-f2a59a80.vercel.app",
     methods: ["GET", "POST", "DELETE", "PUT"],
     allowedHeaders: [
       "Content-Type",
