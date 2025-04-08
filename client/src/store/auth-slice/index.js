@@ -7,6 +7,8 @@ const initialState = {
   user: null,
 };
 
+const url = "https://loe-fashion.onrender.com"
+
 export const registerUser = createAsyncThunk(
   "/auth/register",
 
@@ -28,7 +30,7 @@ export const loginUser = createAsyncThunk(
 
   async (formData) => {
     const response = await axios.post(
-      "https://loe-fashion.onrender.com/api/auth/login",
+      `${url}/api/auth/login`,
       formData,
       {
         withCredentials: true,
