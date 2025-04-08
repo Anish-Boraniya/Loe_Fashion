@@ -11,13 +11,16 @@ const initialState = {
   orderDetails: null,
 };
 
+const url = "https://loe-fashion.onrender.com"
+
+
 export const createNewOrder = createAsyncThunk(
   "/order/createNewOrder",
   async (orderData, { rejectWithValue }) => {
     try {
       console.log('Creating Order with Data:', orderData);
       const response = await axios.post(
-        "http://localhost:5000/api/shop/order/create",
+        `${url}/api/shop/order/create`,
         orderData
       );
       
@@ -34,7 +37,7 @@ export const capturePayment = createAsyncThunk(
   "/order/capturePayment",
   async ({ razorpayPaymentId, razorpayOrderId, razorpaySignature, orderId }) => { //update parameters
     const response = await axios.post(
-      "http://localhost:5000/api/shop/order/capture",
+      `${url}/api/shop/order/capture`,
       {
         razorpayPaymentId, //update payload
         razorpayOrderId,
@@ -51,7 +54,7 @@ export const getAllOrdersByUserId = createAsyncThunk(
   "/order/getAllOrdersByUserId",
   async (userId) => {
     const response = await axios.get(
-      `http://localhost:5000/api/shop/order/list/${userId}`
+      `${url}/api/shop/order/list/${userId}`
     );
 
     return response.data;
@@ -62,7 +65,7 @@ export const getOrderDetails = createAsyncThunk(
   "/order/getOrderDetails",
   async (id) => {
     const response = await axios.get(
-      `http://localhost:5000/api/shop/order/details/${id}`
+      `${url}/api/shop/order/details/${id}`
     );
 
     return response.data;

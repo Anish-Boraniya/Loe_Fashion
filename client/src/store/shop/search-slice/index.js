@@ -6,11 +6,13 @@ const initialState = {
   searchResults: [],
 };
 
+const url = "https://loe-fashion.onrender.com"
+
 export const getSearchResults = createAsyncThunk(
   "/order/getSearchResults",
   async (keyword) => {
     const response = await axios.get(
-      `http://localhost:5000/api/shop/search/${keyword}`
+      `${url}/api/shop/search/${keyword}`
     );
 
     return response.data;

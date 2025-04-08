@@ -7,6 +7,9 @@ const initialState = {
   productDetails: [],
 };
 
+const url = "https://loe-fashion.onrender.com"
+
+
 export const fetchAllFilteredProducts = createAsyncThunk(
   "/products/fetchAllProducts",
   async ({ filterParams, sortParams }) => {
@@ -18,7 +21,7 @@ export const fetchAllFilteredProducts = createAsyncThunk(
     });
 
     const result = await axios.get(
-      `http://localhost:5000/api/shop/products/get?${query}`
+      `${url}/api/shop/products/get?${query}`
     );
 
     console.log(result);
@@ -31,7 +34,7 @@ export const fetchProductDetails = createAsyncThunk(
   "/products/fetchProductDetails",
   async (id) => {
     const result = await axios.get(
-      `http://localhost:5000/api/shop/products/get/${id}`
+      `${url}/api/shop/products/get/${id}`
     );
     return result?.data;
   }

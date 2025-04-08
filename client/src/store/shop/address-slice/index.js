@@ -6,11 +6,14 @@ const initialState = {
   addressList: [],
 };
 
+const url = "https://loe-fashion.onrender.com"
+
+
 export const addNewAddress = createAsyncThunk(
   "/addresses/addNewAddress",
   async (formData) => {
     const response = await axios.post(
-      "http://localhost:5000/api/shop/address/add",
+      `${url}/api/shop/address/add`,
       formData
     );
 
@@ -22,7 +25,7 @@ export const fetchAllAddresses = createAsyncThunk(
   "/addresses/fetchAllAddresses",
   async (userId) => {
     const response = await axios.get(
-      `http://localhost:5000/api/shop/address/get/${userId}`
+      `${url}/api/shop/address/get/${userId}`
     );
 
     return response.data;
@@ -33,7 +36,7 @@ export const editaAddress = createAsyncThunk(
   "/addresses/editaAddress",
   async ({ userId, addressId, formData }) => {
     const response = await axios.put(
-      `http://localhost:5000/api/shop/address/update/${userId}/${addressId}`,
+      `${url}/api/shop/address/update/${userId}/${addressId}`,
       formData
     );
 
@@ -45,7 +48,7 @@ export const deleteAddress = createAsyncThunk(
   "/addresses/deleteAddress",
   async ({ userId, addressId }) => {
     const response = await axios.delete(
-      `http://localhost:5000/api/shop/address/delete/${userId}/${addressId}`
+      `${url}/api/shop/address/delete/${userId}/${addressId}`
     );
 
     return response.data;
