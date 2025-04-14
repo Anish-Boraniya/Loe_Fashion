@@ -3,7 +3,7 @@
 Loe Fashion is a full-stack e-commerce web application built with the MERN stack (MongoDB, Express.js, React.js, Node.js). It offers a seamless shopping experience with features like user authentication, product browsing, cart management, and order processing.​
 
 🚀 Live Demo
-Check out the live application here:  https://loe-fashion.vercel.app/​
+Check out the live application here: https://loe-fashion.vercel.app
 
 🛠️ Tech Stack
 Frontend: React.js, Tailwind CSS​
